@@ -1,7 +1,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/shm.h>
+#include <sys/ipc.h>
 
+void memoryExample();
+
+// not sure what it does or what 323800 is but a alot easier than creating one using ftok
+// seen it on the example so...
+#define SHMKEY 323800
+#define BUFF_SZ	sizeof ( int )
 
 int main(int argc, char* argv[]) {
 	int input;
@@ -27,6 +35,29 @@ int main(int argc, char* argv[]) {
 	 }
 	
 	}
+   void memoryExample();
+   
+   
 	return 0;
 }
 
+void memoryExample()
+{
+  // get shared memory segment ID.. not 100% of this either 
+   int shmid = shmget (SHMKEY, BUFF_SZ, 077 | IPC_CREAT );
+   if (shmid == -1)
+   {
+     printf("Parent: Error in shmget \n");
+     exit(1);
+   }
+   // not sure what 0,0 is for 
+   char * paddr = ( char * ) (shmat (shmid, 0, 0) );
+   int * pint = (int *) (paddr);
+   
+   for ( int i = 0; i<10; i++)
+   {
+     sleep(1);
+     *pint = 10*i;
+     printf("Master: Written Val: = ", *pint, "\n");
+   }
+}
