@@ -35,7 +35,22 @@ int main(int argc, char* argv[]) {
 	 }
 	
 	}
-   void memoryExample();
+
+  switch ( fork())
+  {
+    case -1:
+        printf("failed to fork\n");
+        return (1);
+    case 0:
+      execlp("./worker");
+      printf("worker failed\n");
+      break;
+    default:
+        memoryExample();
+        break;
+  }
+
+  // void memoryExample();
    
    
 	return 0;
@@ -44,7 +59,7 @@ int main(int argc, char* argv[]) {
 void memoryExample()
 {
   // get shared memory segment ID.. not 100% of this either 
-   int shmid = shmget (SHMKEY, BUFF_SZ, 077 | IPC_CREAT );
+   int shmid = shmget (SHMKEY, BUFF_SZ, 0711 | IPC_CREAT );
    if (shmid == -1)
    {
      printf("Parent: Error in shmget \n");
@@ -53,11 +68,11 @@ void memoryExample()
    // not sure what 0,0 is for 
    char * paddr = ( char * ) (shmat (shmid, 0, 0) );
    int * pint = (int *) (paddr);
-   
-   for ( int i = 0; i<10; i++)
+   printf("Master: Written Val: = ", *pint, "\n");
+  /* for ( int i = 0; i<10; i++)
    {
      sleep(1);
      *pint = 10*i;
-     printf("Master: Written Val: = ", *pint, "\n");
-   }
+     printf("Master: Written Val: = \n", *pint, "\n");
+   }*/
 }
