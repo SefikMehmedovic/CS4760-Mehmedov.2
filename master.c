@@ -1,10 +1,14 @@
-
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <sys/shm.h>
 #include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <getopt.h>
 
-void memoryExample();
+void sharedMemory();
 
 // not sure what it does or what 323800 is but a alot easier than creating one using ftok
 // seen it on the example so...
@@ -12,7 +16,7 @@ void memoryExample();
 #define BUFF_SZ	sizeof ( int )
 
 int main(int argc, char* argv[]) {
-	int input;
+	int input, n, s;
 
 	while ((input = getopt (argc, argv, "hn:s:")) != -1)
 	
@@ -26,11 +30,18 @@ int main(int argc, char* argv[]) {
 		break;
 		
 		case 'n':
-		printf("case n\n");
+     n = atoi(optarg);
+		printf("case n: %d\n", n);
 		break;
 		
 		case 's':
-		printf(" case s ");
+     s = atoi(optarg);
+		printf(" case s %d ", s);
+     
+    default:
+      exit(1);
+      
+     
 		break;
 	 }
 	
@@ -42,11 +53,11 @@ int main(int argc, char* argv[]) {
         printf("failed to fork\n");
         return (1);
     case 0:
-      execlp("./worker");
+      execlp("./worker"," worker", NULL);
       printf("worker failed\n");
       break;
     default:
-        memoryExample();
+        sharedMemory();
         break;
   }
 
@@ -56,7 +67,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-void memoryExample()
+void sharedMemory()
 {
   // get shared memory segment ID.. not 100% of this either 
    int shmid = shmget (SHMKEY, BUFF_SZ, 0711 | IPC_CREAT );
