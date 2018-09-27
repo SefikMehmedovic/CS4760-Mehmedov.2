@@ -1,6 +1,6 @@
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <sys/shm.h>
 #include <sys/ipc.h>
 
@@ -17,7 +17,7 @@ return 0;
 }
 
 void child() {
-  sleep(1);
+
   int shmid = shmget (SHMKEY, BUFF_SZ, 0711);
   
   if (shmid == -1) {
@@ -25,12 +25,13 @@ void child() {
     exit(1);
     
   }
-  
-  
   int * cint = (int *) (shmat (shmid, 0, 0) );
-  printf("Worker: Read Val: =  ", *cint, "\n");
   
-  /*for ( int i =0; i<10; i++)
+  
+  
+  /* old code from example
+  printf("Worker: Read Val: =  ", *cint, "\n");
+  for ( int i =0; i<10; i++)
   {
     sleep(1);
     printf("Worker: Read Val: =  ", *cint, "\n");
