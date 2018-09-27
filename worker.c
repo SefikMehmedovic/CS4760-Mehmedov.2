@@ -6,29 +6,42 @@
 
 void child();
 
-#define SHMKEY 323800
-#define BUFF_SZ	sizeof ( int )
-#define MILLION 1000000
+#define SHMKEY 321800
+#define BUFF_SZ	sizeof ( int ) 
+
 
 int main() {
-   child();
+    //printf("CCHILLLD\n");
+    
+child();
    
 return 0;
 }
 
 void child() {
-int passedNValue;	
-  int shmid = shmget (SHMKEY, BUFF_SZ, 0711);
-  
-  if (shmid == -1) {
+
+int getValue;	
+
+  int shmid = shmget (SHMKEY, BUFF_SZ, 0711 | IPC_CREAT );
+  if (shmid == -1)
+   {
     printf("Worker: Error in shmget..\n");
-    exit(1);
+    return 1;
+   }
+  int *cint = ( shmat (shmid, NULL, 0) );
+ 
+  getValue = cint[0];
     
+  for (int i= 0; i < (getValue * 1000000); i++)
+  {
+    cint[2]++;
+    if(cint[2] > 999)
+    {
+      cint[1]++;
+      cint[2] = 0;
+    }
   }
-  int * cint = (int *) (shmat (shmid, 0, 0) );
-  passedNValue = cint[0];
-  int test = MILLION * passedNValue;
-  printf("million: %d \n", test);
+  shmdt(cint);
   
   /* old code from example
   printf("Worker: Read Val: =  ", *cint, "\n");
