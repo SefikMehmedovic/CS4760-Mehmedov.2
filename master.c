@@ -36,23 +36,22 @@ int main(int argc, char* argv[]) {
      n = atoi(optarg);
      callFork = true;
 	   //printf("case n: %d\n", n);
-		break;
+		  break;
 		
 		case 's':
      s = atoi(optarg);
 		//printf(" case s %d ", s);
-     
+     	break;
+      
     default:
       //exit program incorrect options
       exit(1);
-      
-     
-		break;
+	
 	 }
 	
 	}
   
-  alarm(2);
+ // alarm(2);
   
   if(callFork == true)
   {
@@ -147,8 +146,8 @@ void sharedMemory(int n, int s)
      
      wait(NULL);
      
-     printf(
-     
+     printf("Seconds: %d Milliseconds: %d \n",pint[0], pint[1]);
+     shmdt(pint);
    }
    
    //example code

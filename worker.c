@@ -8,16 +8,16 @@ void child();
 
 #define SHMKEY 323800
 #define BUFF_SZ	sizeof ( int )
+#define MILLION 1000000
 
-int main(int argc, char* argv[]) {
-  	
+int main() {
    child();
    
 return 0;
 }
 
 void child() {
-
+int passedNValue;	
   int shmid = shmget (SHMKEY, BUFF_SZ, 0711);
   
   if (shmid == -1) {
@@ -26,8 +26,9 @@ void child() {
     
   }
   int * cint = (int *) (shmat (shmid, 0, 0) );
-  
-  
+  passedNValue = cint[0];
+  int test = MILLION * passedNValue;
+  printf("million: %d \n", test);
   
   /* old code from example
   printf("Worker: Read Val: =  ", *cint, "\n");
