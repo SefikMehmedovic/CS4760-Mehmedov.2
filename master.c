@@ -9,13 +9,14 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+//void signalHandler(int sig);
 void sharedMemory(int n, int s);
 
 // not sure what it does or what 323800 is but a alot easier than creating one using ftok
 // seen it on the example so...
 
 #define SHMKEY 321800
-#define BUFF_SZ	sizeof ( int ) 
+#define BUFF_SZ	sizeof ( int )
 
 
 int main(int argc, char* argv[]) {
@@ -61,7 +62,9 @@ int main(int argc, char* argv[]) {
    printf("Exceeded n > 20. N is set back to 20---\n");
    n = 20;
  }
-  alarm(2);   
+ //kill process
+  signal(SIGKILL,alarm);
+ 
   sharedMemory(n,s);
   
 
@@ -72,10 +75,11 @@ int main(int argc, char* argv[]) {
 
 void sharedMemory(int n, int s)
 {
+
   //  printf("sharedmemory: \n");
     int count = 0;
   // get shared memory segment ID.. not 100% of this 
-   int shmid = shmget (SHMKEY, BUFF_SZ, 0711 | IPC_CREAT );
+   int shmid = shmget (SHMKEY,BUFF_SZ , 0711 | IPC_CREAT );
    if (shmid == -1)
    {
      printf("Parent: Error in shmget \n");
@@ -101,14 +105,18 @@ void sharedMemory(int n, int s)
      }
      while(count < n) 
      {
+       //wait for child
+       wait(NULL);
+       count++;
        if((fork()) == 0)
        {
-          execl("./worker"," worker", NULL);
-          count++;
+           
+           execl("./worker"," worker", NULL);
+          
        }
      } 
    }
-   else
+   else //if s>n 
    {
      for(int i = 0;i < n; i++)
      {
@@ -118,7 +126,7 @@ void sharedMemory(int n, int s)
        }
      }
    }
-     
+     //wait for child and print seconds and milliseconds
      wait(NULL);
      printf("Seconds: %d Milliseconds: %d \n",pint[1], pint[2]);
      shmdt(pint);
@@ -132,3 +140,9 @@ void sharedMemory(int n, int s)
      printf("Master: Written Val: = \n", *pint, "\n");
    }*/
 }
+
+//void signalHandler(int sig)
+//{
+//  printf("Caught signal %d\n",sig);
+//  //kill (pid,SIGINT);
+//}

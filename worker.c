@@ -7,7 +7,7 @@
 void child();
 
 #define SHMKEY 321800
-#define BUFF_SZ	sizeof ( int ) 
+#define BUFF_SZ	sizeof ( int )
 
 
 int main() {
@@ -20,9 +20,10 @@ return 0;
 
 void child() {
 
+
 int getValue;	
 
-  int shmid = shmget (SHMKEY, BUFF_SZ, 0711 | IPC_CREAT );
+  int shmid = shmget (SHMKEY,BUFF_SZ , 0711 | IPC_CREAT );
   if (shmid == -1)
    {
     printf("Worker: Error in shmget..\n");
@@ -31,8 +32,7 @@ int getValue;
   int *cint = ( shmat (shmid, NULL, 0) );
  
   getValue = cint[0];
-    
-  for (int i= 0; i < (getValue * 1000000); i++)
+  for (int i= 0; i < (cint[0] * 1000000); i++)
   {
     cint[2]++;
     if(cint[2] > 999)

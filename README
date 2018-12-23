@@ -1,0 +1,24 @@
+Sefik Mehmedovic
+Project 2
+CS 4760 OS
+
+To run this project you have to compile it. Type 'make' into console 
+and in the correct directory. 
+You will get 2 executables master and worker. 
+to run this program you have to ./master -n x -s x
+The 3 arguments ./master takes are: -h for help 
+-n for total amount of arguments (max is 20)
+-s for total amount of children to run at one time
+
+
+// notes: 
+** error i am encountering 
+
+I am having a issue where if -n value is bigger than s like it should be nothing happens and the program is killed
+by the signal. 
+If s is bigger than it is not a problem and the program runs normally.
+Sent you an email about this issue. 
+
+
+Edit-- After recieving your reply i went over my code and saw my issue. I was missing a wait(NULL) and i had my
+counter in the wrong part of the code.

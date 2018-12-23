@@ -1,0 +1,9 @@
+* 13f112d : having an issue where if n is bigger than s( like it should be) nothing happens
+* c29f423 : save before i mess anything up
+* 4c6a72a :  logic to spawn correct children
+* 5ac3573 : child takes correct arguments for fork
+* d23fb37 : master forks off workers
+* 132907e : updated memory sharing
+* 1dfe70c : save before sharememory messes it up
+* 36486a6 : updated makefile and master to take in arguments
+* 83bc409 : test
